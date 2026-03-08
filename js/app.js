@@ -44,5 +44,16 @@ function renderIssues(issues) {
         const priorityColor = issue.priority.toLowerCase() === 'high' ? 'text-red-500 bg-red-50' : 'text-gray-500 bg-gray-100';
         const card = document.createElement('div');
         grid.appendChild(card);
+        card.className = `bg-white border-t-4 ${borderClass} shadow-sm rounded-md p-4 cursor-pointer hover:shadow-md transition`;
+        const issueId = issue._id || issue.id;
+        card.onclick = () => openModal(issueId);
+        card.innerHTML = `
+            <div class="flex justify-between mb-2">
+                <img src="${iconSrc}" class="w-4 h-4" alt="status">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${priorityColor} uppercase">${issue.priority}</span>
+            </div>
+            <h3 class="font-bold text-sm mb-1">${issue.title}</h3>
+            <p class="text-xs text-gray-500 mb-3 line-clamp-2">${issue.description}</p>
+        `;
     });
 }
