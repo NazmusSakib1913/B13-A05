@@ -32,3 +32,13 @@ async function fetchIssues() {
         loader.classList.add('hidden');
     }
 }
+
+function renderIssues(issues) {
+    grid.innerHTML = '';
+    issueCountLabel.innerText = issues.length;
+
+    issues.forEach(issue => {
+        const card = document.createElement('div');
+        grid.appendChild(card);
+    });
+}
