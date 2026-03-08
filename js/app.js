@@ -38,6 +38,10 @@ function renderIssues(issues) {
     issueCountLabel.innerText = issues.length;
 
     issues.forEach(issue => {
+        const isOpen = issue.status.toLowerCase() === 'open';
+        const borderClass = isOpen ? 'border-t-green-500' : 'border-t-purple-500';
+        const iconSrc = isOpen ? 'assets/Open-Status.png' : 'assets/Closed- Status .png';
+        const priorityColor = issue.priority.toLowerCase() === 'high' ? 'text-red-500 bg-red-50' : 'text-gray-500 bg-gray-100';
         const card = document.createElement('div');
         grid.appendChild(card);
     });
