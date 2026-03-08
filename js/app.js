@@ -85,3 +85,76 @@ tabs.forEach(tab => {
         }
     });
 });
+
+document.getElementById('searchForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = document.getElementById('searchInput').value.trim();
+    if (!query) return fetchIssues(); 
+    loader.classList.remove('hidden');
+    grid.innerHTML = '';
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${query}`);
+        const data = await res.json();
+
+        let results = [];
+        if (Array.isArray(data)) {
+            results = data;
+        } else if (data.data && Array.isArray(data.data)) {
+            results = data.data;
+        }
+        renderIssues(results);
+    } catch (error) {
+        console.error("Search failed:", error);
+    } finally {
+        loader.classList.add('hidden');
+    }
+});
+
+async function openModal(id) {
+    const modal = document.getElementById('issueModal');
+    const content = document.getElementById('modalContent');
+    content.innerHTML = `<div class="loader"></div>`; 
+    modal.classList.remove('hidden');
+
+    try {
+        const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`);
+        const raw = await res.json();
+        const issue = raw.data ? raw.data : raw;
+
+        const isOpen = issue.status.toLowerCase() === 'open';
+        const statusColor = isOpen ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700';
+
+        content.innerHTML = `
+            <h2 class="text-lg font-bold text-gray-800 mb-2">${issue.title}</h2>
+            <div class="flex items-center gap-2 text-xs mb-4 border-b pb-4">
+                <span class="${statusColor} px-2 py-1 rounded-full font-bold uppercase">${issue.status}</span>
+                <span class="text-gray-500">• Opened by <span class="font-bold text-gray-700">${issue.author}</span></span>
+                <span class="text-gray-500">• ${new Date(issue.createdAt).toLocaleDateString()}</span>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-6">${issue.description}</p>
+            
+            <div class="bg-gray-50 p-4 rounded-md flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-gray-500">Assignee:</p>
+                    <p class="font-bold text-sm text-gray-800">${issue.assignee || 'Unassigned'}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Priority:</p>
+                    <span class="text-xs font-bold text-white bg-red-500 px-2 py-1 rounded-full uppercase">${issue.priority}</span>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button onclick="document.getElementById('issueModal').classList.add('hidden')" class="bg-[#5C16FF] text-white px-4 py-2 rounded-md hover:bg-purple-700">Close</button>
+            </div>
+        `;
+    } catch (error) {
+        content.innerHTML = `<p class="text-red-500">Failed to load issue details.</p>`;
+    }
+}
+
+document.getElementById('closeModal').addEventListener('click', () => {
+    document.getElementById('issueModal').classList.add('hidden');
+});
+
+fetchIssues();
