@@ -18,6 +18,14 @@ async function fetchIssues() {
     try {
         const res = await fetch('https://phi-lab-server.vercel.app/api/v1/lab/issues');
         const data = await res.json();
+        if (Array.isArray(data)) {
+            allIssues = data;
+        } else if (data.data && Array.isArray(data.data)) {
+            allIssues = data.data;
+        } else {
+            allIssues = [];
+        }
+        renderIssues(allIssues);
     } catch (error) {
         console.error("Error:", error);
     } finally {
