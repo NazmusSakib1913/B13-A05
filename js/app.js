@@ -56,7 +56,7 @@ function renderIssues(issues) {
             <h3 class="font-bold text-sm text-gray-800 mb-1 truncate">${issue.title}</h3>
             <p class="text-xs text-gray-500 mb-3 line-clamp-2">${issue.description}</p>
             <div class="flex gap-2 mb-4 flex-wrap">
-                ${issue.labels.map(label => `<span class="text-[10px] border border-gray-200 px-2 py-0.5 rounded-full text-gray-600">${label}</span>`).join('')}
+                ${issue.labels.map(label => `<span class="text-[10px] bg-yellow-100 text-yellow-800 border border-yellow-300 px-2 py-0.5 rounded-full font-medium">${label}</span>`).join('')}
             </div>
             <div class="text-[10px] text-gray-400 mt-auto border-t pt-2">
                 <p>#${String(issueId).substring(0, 5)} by ${issue.author}</p>
@@ -89,7 +89,7 @@ tabs.forEach(tab => {
 document.getElementById('searchForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const query = document.getElementById('searchInput').value.trim();
-    if (!query) return fetchIssues(); 
+    if (!query) return fetchIssues();
     loader.classList.remove('hidden');
     grid.innerHTML = '';
     try {
@@ -113,7 +113,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
 async function openModal(id) {
     const modal = document.getElementById('issueModal');
     const content = document.getElementById('modalContent');
-    content.innerHTML = `<div class="loader"></div>`; 
+    content.innerHTML = `<div class="loader"></div>`;
     modal.classList.remove('hidden');
 
     try {
