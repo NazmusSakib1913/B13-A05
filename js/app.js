@@ -60,7 +60,8 @@ function renderIssues(issues) {
             </div>
             <div class="text-[10px] text-gray-400 mt-auto border-t pt-2">
                 <p>#${String(issueId).substring(0, 5)} by ${issue.author}</p>
-                <p>${new Date(issue.createdAt).toLocaleDateString()}</p>
+                <p>Created: ${new Date(issue.createdAt).toLocaleDateString()}</p>
+                <p>Modified: ${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString() : 'N/A'}</p>
             </div>
         `;
         grid.appendChild(card);
